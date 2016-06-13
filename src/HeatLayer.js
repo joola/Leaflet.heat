@@ -88,8 +88,10 @@ L.HeatLayer = (L.Layer ? L.Layer : L.Class).extend({
         canvas.style[originProp] = '50% 50%';
 
         var size = this._map.getSize();
-        canvas.width  = size.x;
-        canvas.height = size.y;
+        //ensure canvas has minimize size; otherwise simpleheat will fail as it
+        //assumes there is a non-empty area to work with
+        canvas.width  = Math.max(size.x, 20);
+        canvas.height = Math.max(size.y, 20);
 
         var animated = this._map.options.zoomAnimation && L.Browser.any3d;
         L.DomUtil.addClass(canvas, 'leaflet-zoom-' + (animated ? 'animated' : 'hide'));
@@ -116,10 +118,10 @@ L.HeatLayer = (L.Layer ? L.Layer : L.Class).extend({
         var size = this._map.getSize();
 
         if (this._heat._width !== size.x) {
-            this._canvas.width = this._heat._width  = size.x;
+            this._canvas.width = this._heat._width  = Math.max(size.x, 20);
         }
         if (this._heat._height !== size.y) {
-            this._canvas.height = this._heat._height = size.y;
+            this._canvas.height = this._heat._height = Math.max(size.y, 20);
         }
 
         this._redraw();
